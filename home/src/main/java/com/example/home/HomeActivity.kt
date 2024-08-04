@@ -1,4 +1,4 @@
-package com.example.moviemania
+package com.example.home
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,15 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.moviemania.ui.theme.MovieManiaTheme
+import com.example.home.ui.theme.MovieManiaTheme
 
-class MainActivity : ComponentActivity() {
+class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MovieManiaTheme {
-                BaseAppNavigator()
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Greeting(
+                        name = "Android",
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
             }
         }
     }
