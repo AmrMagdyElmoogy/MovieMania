@@ -23,3 +23,4 @@ rootProject.name = "Movie Mania"
 include(":app")
 include(":home")
 include(":moviedetails")
+include(":common")

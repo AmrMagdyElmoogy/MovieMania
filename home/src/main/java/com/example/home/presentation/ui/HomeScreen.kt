@@ -23,17 +23,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -43,7 +40,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -56,14 +52,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.example.common.theme.Amber
 import com.example.home.R
 import com.example.home.presentation.DevicePreviewSettings
-import com.example.home.presentation.theme.Amber
-import com.example.home.presentation.theme.DarkRed
-import com.example.home.presentation.theme.MovieManiaTheme
+import com.example.home.util.debugComposable
+import com.example.common.theme.DarkRed
 
-@OptIn(ExperimentalMaterial3Api::class)
-@DevicePreviewSettings.DevicePreview
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier
@@ -72,116 +66,121 @@ fun HomeScreen(
         mutableStateOf(TextFieldValue(""))
     }
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
-
-    MovieManiaTheme {
-        Scaffold(
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.onBackground,
-            modifier = modifier
-                .fillMaxSize(),
-            bottomBar = {},
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier.padding(paddingValues),
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        modifier = modifier
+            .debugComposable("Scaffold Parent")
+            .fillMaxSize(),
+        bottomBar = {},
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .debugComposable("Scaffold Parent"),
+        ) {
+            GreetingsHeader()
+            OutlinedTextField(
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                ),
+                value = itemToSearch,
+                onValueChange = {
+                    itemToSearch = it
+                },
+                keyboardActions = KeyboardActions(
+                    onSend = {}
+                ),
+                keyboardOptions = KeyboardOptions(
+                    autoCorrect = true,
+                    imeAction = ImeAction.Search
+                ),
+                shape = MaterialTheme.shapes.medium,
+                leadingIcon = {
+                    Icon(
+                        Icons.Filled.Search,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(40.dp)
+                    )
+                },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth()
+                    .debugComposable("Search topbar"),
+                placeholder = {
+                    Text(
+                        stringResource(R.string.search),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+            )
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                GreetingsHeader()
-                OutlinedTextField(
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    value = itemToSearch,
-                    onValueChange = {
-                        itemToSearch = it
-                    },
-                    keyboardActions = KeyboardActions(
-                        onSend = {}
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        autoCorrect = true,
-                        imeAction = ImeAction.Search
-                    ),
-                    shape = MaterialTheme.shapes.medium,
-                    leadingIcon = {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(40.dp)
-                        )
-                    },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
-                    placeholder = {
-                        Text(
-                            stringResource(R.string.search),
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                    }
-                )
+                Text("Categories", style = MaterialTheme.typography.titleLarge)
                 Row(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text("Categories", style = MaterialTheme.typography.titleLarge)
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            "See all",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = Color.LightGray
-                            ),
-                        )
-                        Icon(
-                            Icons.Filled.KeyboardArrowRight,
-                            tint = Color.LightGray,
-                            contentDescription = null
-                        )
-                    }
+                    Text(
+                        "See all",
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = Color.LightGray
+                        ),
+                    )
+                    Icon(
+                        Icons.Filled.KeyboardArrowRight,
+                        tint = Color.LightGray,
+                        contentDescription = null
+                    )
                 }
-                LazyRow(
-                    contentPadding = PaddingValues(16.dp),
-                ) {
-                    items(listOfCategories) {
-                        Box(
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(MaterialTheme.colorScheme.surface)
-                                .padding(8.dp),
+            }
+            LazyRow(
+                contentPadding = PaddingValues(16.dp),
+                modifier = Modifier.debugComposable("LazyRowChips")
+            ) {
+                items(listOfCategories) {
+                    Box(
+                        modifier = Modifier
+                            .debugComposable("MovieChipBox")
+                            .padding(end = 8.dp)
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .padding(8.dp),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.film_reel),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .padding(end = 8.dp)
-                                        .size(30.dp)
-                                )
-                                Text(it, style = MaterialTheme.typography.bodyMedium)
-                            }
+                            Image(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.film_reel),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .size(30.dp)
+                            )
+                            Text(it, style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 }
-                Text(
-                    "Feature Movies",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                LazyRow(
-                    modifier = Modifier.fillMaxHeight(),
-                    contentPadding = PaddingValues(16.dp),
-                    state = listState,
-                ) {
-                    items(5) {
-                        FilmItemCard()
-                    }
+            }
+            Text(
+                "Feature Movies",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .debugComposable("LazyRowFilm"),
+                contentPadding = PaddingValues(16.dp),
+                state = listState,
+            ) {
+                items(5) {
+                    FilmItemCard()
                 }
             }
         }
@@ -218,7 +217,7 @@ fun GreetingsHeader(
         ) {
             Text(
                 stringResource(id = R.string.greeting, name),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.titleLarge
             )
             Text(
                 stringResource(R.string.find_your_favorite_movie),
@@ -249,14 +248,13 @@ fun GreetingsHeader(
 @Composable
 fun FilmItemCard(modifier: Modifier = Modifier) {
     Box(modifier = Modifier.fillMaxSize()) {
-
         Box(
             modifier = Modifier
-                .align(Alignment.Center)
+                .align(Alignment.TopCenter)
                 .padding(8.dp)
                 .clip(MaterialTheme.shapes.large)
-                .width(250.dp)
-                .fillMaxHeight()
+                .width(300.dp)
+                .height(450.dp)
         ) {
             Image(
                 painterResource(id = R.drawable.poster),

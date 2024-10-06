@@ -1,4 +1,4 @@
-package com.example.home.presentation.theme
+package com.example.common.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.home.R
+import com.example.common.R
 
 val rubik = FontFamily(
     Font(R.font.rubik_light, weight = FontWeight.Light),
@@ -16,7 +16,6 @@ val rubik = FontFamily(
     Font(R.font.rubik_semibold, FontWeight.SemiBold),
 )
 
-// Set of Material typography styles to start with
 val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = rubik,

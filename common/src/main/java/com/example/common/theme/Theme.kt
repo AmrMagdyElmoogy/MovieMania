@@ -1,4 +1,4 @@
-package com.example.home.presentation.theme
+package com.example.common.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -55,6 +55,7 @@ fun MovieManiaTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
+        shapes = shapes
     )
 }
